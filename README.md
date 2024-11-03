@@ -1,2 +1,2 @@
-# E-Learn
-Learning Paltform For Disabled People
+# Learning Platform for Disabled Persons
+This platform helps disabled persons learn and grow through interactive features.
