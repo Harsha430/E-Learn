@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>E-Learn | Learning Resources</title>
+    <!-- Bootstrap 5 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" />
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        --primary: #6366f1;
+        --secondary: #ec4899;
+        --bg-dark: #0f172a;
+        --sidebar-bg: rgba(15, 23, 42, 0.7);
+        --glass-bg: rgba(255, 255, 255, 0.03);
+        --glass-border: rgba(255, 255, 255, 0.08);
+      }
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: var(--bg-dark);
+        color: #fff;
+        min-height: 100vh;
+        overflow-x: hidden;
+        margin: 0;
+        display: flex;
+      }
+      
+      .orb {
+        position: fixed;
+        border-radius: 50%;
+        filter: blur(100px);
+        z-index: -1;
+      }
+      .orb-1 { width: 400px; height: 400px; background: var(--primary); top: -50px; right: -100px; opacity: 0.3; animation: drift 15s infinite alternate ease-in-out; }
+      .orb-2 { width: 500px; height: 500px; background: var(--secondary); bottom: -150px; left: -150px; opacity: 0.2; animation: drift 20s infinite alternate-reverse ease-in-out; }
+      @keyframes drift {
+        0% { transform: translate(0, 0); }
+        100% { transform: translate(-40px, 40px); }
+      }
+
+      /* Sidebar */
+      #sidebar {
+        width: 280px;
+        background: var(--sidebar-bg);
+        border-right: 1px solid var(--glass-border);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        height: 100vh;
+        position: fixed;
+        padding: 30px 20px;
+        display: flex;
+        flex-direction: column;
+        z-index: 1000;
+        transition: transform 0.3s ease;
+      }
+      .brand {
+        font-size: 1.8rem;
+        font-weight: 800;
+        margin-bottom: 40px;
+        text-align: center;
+        background: linear-gradient(to right, #a855f7, #ec4899);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      .nav-link {
+        color: #94a3b8;
+        padding: 12px 20px;
+        border-radius: 12px;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        font-weight: 600;
+        transition: all 0.3s;
+        text-decoration: none;
+      }
+      .nav-link:hover, .nav-link.active {
+        background: rgba(99, 102, 241, 0.15);
+        color: #fff;
+      }
+      .nav-link i { font-size: 1.2rem; width: 24px; text-align: center; }
+      .logout { margin-top: auto; color: #ef4444; }
+      .logout:hover { background: rgba(239, 68, 68, 0.15); color: #f87171; }
+
+      /* Main Content */
+      #main-content {
+        margin-left: 280px;
+        padding: 40px;
+        width: calc(100% - 280px);
+      }
+      
+      .dashboard-header {
+        margin-bottom: 40px;
+      }
+      .dashboard-header h2 {
+        font-weight: 800;
+        font-size: 2.5rem;
+        background: linear-gradient(to right, #fff, #cbd5e1);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .resource-section {
+        background: var(--glass-bg);
+        border: 1px solid var(--glass-border);
+        backdrop-filter: blur(16px);
+        border-radius: 20px;
+        padding: 30px;
+        margin-bottom: 30px;
+        box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
+        transition: transform 0.3s, box-shadow 0.3s;
+      }
+      .resource-section:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 40px -10px rgba(0,0,0,0.6);
+      }
+      .resource-title {
+        font-size: 1.5rem;
+        color: #f8fafc;
+        margin-bottom: 25px;
+        font-weight: 600;
+      }
+      
+      .btn-custom {
+        width: 100%;
+        margin-bottom: 15px;
+        font-size: 1.1em;
+        padding: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.3s, transform 0.2s;
+        border-radius: 12px;
+        border: none;
+        color: white;
+        font-weight: 600;
+        text-decoration: none;
+      }
+      .btn-custom i { margin-right: 12px; font-size: 1.3rem; }
+      .btn-custom:hover { transform: scale(1.02); color:white; }
+      
+      .btn-code { background: linear-gradient(45deg, #3b82f6, #6366f1); }
+      .btn-yt { background: linear-gradient(45deg, #ef4444, #f43f5e); }
+      .btn-assoc { background: linear-gradient(45deg, #10b981, #059669); }
+    </style>
+  </head>
+  <body>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+
+    <nav id="sidebar">
+      <div class="brand">E-Learn</div>
+      <a href="/dashboard" class="nav-link"><i class="fas fa-th-large"></i> Dashboard</a>
+      <a href="/courses" class="nav-link"><i class="fas fa-book-open"></i> Courses</a>
+      <a href="/learning" class="nav-link active"><i class="fas fa-brain"></i> Learning</a>
+      <a href="/workspace" class="nav-link"><i class="fas fa-tools"></i> Workspace</a>
+      <a href="/logout" class="nav-link logout"><i class="fas fa-sign-out-alt"></i> Log Out</a>
+    </nav>
+
+    <main id="main-content">
+      <div class="dashboard-header">
+        <h2>Learning Resources</h2>
+        <p class="text-secondary">Curated accessible learning materials for everyone.</p>
+      </div>
+
+      <div class="row">
+        <div class="col-md-4">
+          <div class="resource-section">
+            <h3 class="resource-title"><i class="fas fa-code text-primary me-2"></i> Coding</h3>
+            <a href="https://code.org" class="btn-custom btn-code" target="_blank"><i class="fas fa-laptop-code"></i> Code.org</a>
+            <a href="https://scratch.mit.edu" class="btn-custom btn-code" target="_blank"><i class="fas fa-puzzle-piece"></i> Scratch</a>
+            <a href="https://www.w3.org/WAI/" class="btn-custom btn-code" target="_blank"><i class="fas fa-info-circle"></i> W3C WAI</a>
+            <a href="https://www.freecodecamp.org" class="btn-custom btn-code" target="_blank"><i class="fas fa-graduation-cap"></i> FreeCodeCamp</a>
+            <a href="https://www.codecademy.com" class="btn-custom btn-code" target="_blank"><i class="fas fa-book-open"></i> Codecademy</a>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="resource-section">
+            <h3 class="resource-title"><i class="fab fa-youtube text-danger me-2"></i> Sign Language</h3>
+            <a href="https://www.youtube.com/@ASLMeredith" class="btn-custom btn-yt" target="_blank"><i class="fas fa-video"></i> ASL Meredith</a>
+            <a href="https://www.youtube.com/@SignLanguage101" class="btn-custom btn-yt" target="_blank"><i class="fas fa-video"></i> Sign Language 101</a>
+            <a href="https://www.youtube.com/@LearnASL" class="btn-custom btn-yt" target="_blank"><i class="fas fa-video"></i> Learn ASL</a>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="resource-section">
+            <h3 class="resource-title"><i class="fas fa-globe text-success me-2"></i> Education</h3>
+            <a href="https://www.nfb.org" class="btn-custom btn-assoc" target="_blank"><i class="fas fa-universal-access"></i> NFB</a>
+            <a href="https://www.udacity.com" class="btn-custom btn-assoc" target="_blank"><i class="fas fa-laptop"></i> Udacity</a>
+            <a href="https://www.khanacademy.org" class="btn-custom btn-assoc" target="_blank"><i class="fas fa-school"></i> Khan Academy</a>
+            <a href="https://www.coursera.org" class="btn-custom btn-assoc" target="_blank"><i class="fas fa-chalkboard-teacher"></i> Coursera</a>
+          </div>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

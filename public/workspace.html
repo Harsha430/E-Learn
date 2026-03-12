@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>E-Learn | Workspace</title>
+    <!-- Bootstrap 5 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" />
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        --primary: #6366f1;
+        --secondary: #ec4899;
+        --bg-dark: #0f172a;
+        --sidebar-bg: rgba(15, 23, 42, 0.7);
+        --glass-bg: rgba(255, 255, 255, 0.03);
+        --glass-border: rgba(255, 255, 255, 0.08);
+      }
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: var(--bg-dark);
+        color: #fff;
+        min-height: 100vh;
+        overflow-x: hidden;
+        margin: 0;
+        display: flex;
+      }
+      
+      .orb {
+        position: fixed;
+        border-radius: 50%;
+        filter: blur(100px);
+        z-index: -1;
+      }
+      .orb-1 { width: 400px; height: 400px; background: var(--primary); top: -50px; right: -100px; opacity: 0.3; animation: drift 15s infinite alternate ease-in-out; }
+      .orb-2 { width: 500px; height: 500px; background: var(--secondary); bottom: -150px; left: -150px; opacity: 0.2; animation: drift 20s infinite alternate-reverse ease-in-out; }
+      @keyframes drift {
+        0% { transform: translate(0, 0); }
+        100% { transform: translate(-40px, 40px); }
+      }
+
+      /* Sidebar */
+      #sidebar {
+        width: 280px;
+        background: var(--sidebar-bg);
+        border-right: 1px solid var(--glass-border);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        height: 100vh;
+        position: fixed;
+        padding: 30px 20px;
+        display: flex;
+        flex-direction: column;
+        z-index: 1000;
+        transition: transform 0.3s ease;
+      }
+      .brand {
+        font-size: 1.8rem;
+        font-weight: 800;
+        margin-bottom: 40px;
+        text-align: center;
+        background: linear-gradient(to right, #a855f7, #ec4899);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      .nav-link {
+        color: #94a3b8;
+        padding: 12px 20px;
+        border-radius: 12px;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        font-weight: 600;
+        transition: all 0.3s;
+        text-decoration: none;
+      }
+      .nav-link:hover, .nav-link.active {
+        background: rgba(99, 102, 241, 0.15);
+        color: #fff;
+      }
+      .nav-link i { font-size: 1.2rem; width: 24px; text-align: center; }
+      .logout { margin-top: auto; color: #ef4444; }
+      .logout:hover { background: rgba(239, 68, 68, 0.15); color: #f87171; }
+
+      /* Main Content */
+      #main-content {
+        margin-left: 280px;
+        padding: 40px;
+        width: calc(100% - 280px);
+      }
+      
+      .dashboard-header {
+        margin-bottom: 40px;
+      }
+      .dashboard-header h2 {
+        font-weight: 800;
+        font-size: 2.5rem;
+        background: linear-gradient(to right, #fff, #cbd5e1);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      
+      .icon-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 30px;
+        margin-top: 50px;
+      }
+      
+      .tool-card {
+        background: var(--glass-bg);
+        border: 1px solid var(--glass-border);
+        backdrop-filter: blur(16px);
+        border-radius: 20px;
+        padding: 30px 20px;
+        width: 180px;
+        text-align: center;
+        cursor: pointer;
+        transition: transform 0.3s, box-shadow 0.3s, background 0.3s;
+      }
+      .tool-card:hover {
+        transform: translateY(-10px);
+        background: rgba(255,255,255,0.08);
+        box-shadow: 0 20px 40px -10px rgba(0,0,0,0.6);
+      }
+      .tool-card i {
+        font-size: 3rem;
+        background: linear-gradient(to right, #6366f1, #a855f7);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 15px;
+      }
+      .tool-card p {
+        font-weight: 600;
+        margin: 0;
+        color: #f8fafc;
+      }
+
+      /* Modals/Popups */
+      .popup-overlay {
+        display: none;
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(0,0,0,0.6);
+        backdrop-filter: blur(5px);
+        z-index: 2000;
+        align-items: center;
+        justify-content: center;
+      }
+      .popup-overlay.active {
+        display: flex;
+        animation: fadeIn 0.3s forwards;
+      }
+      @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+      
+      .popup-card {
+        background: rgba(30, 41, 59, 0.9);
+        border: 1px solid var(--glass-border);
+        backdrop-filter: blur(20px);
+        border-radius: 20px;
+        padding: 30px;
+        width: 100%;
+        max-width: 500px;
+        max-height: 90vh;
+        overflow-y: auto;
+        box-shadow: 0 25px 50px -12px rgba(0,0,0,0.8);
+      }
+      .popup-card h4 {
+        font-weight: 800;
+        margin-bottom: 20px;
+        color: #f8fafc;
+      }
+      .popup-card .btn-close-custom {
+        margin-top: 20px;
+        background: rgba(255,255,255,0.1);
+        color: white;
+        border: none;
+        padding: 8px 20px;
+        border-radius: 10px;
+        transition: background 0.2s;
+      }
+      .popup-card .btn-close-custom:hover { background: rgba(255,255,255,0.2); }
+      .popup-card .btn-action {
+        background: linear-gradient(45deg, var(--primary), #8b5cf6);
+        color: white;
+        border: none;
+        padding: 8px 20px;
+        border-radius: 10px;
+        font-weight: 600;
+      }
+
+      .quiz-option {
+        display: block;
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,255,255,0.1);
+        padding: 10px 15px;
+        border-radius: 10px;
+        margin-bottom: 10px;
+        cursor: pointer;
+      }
+      .quiz-option input { margin-right: 10px; }
+      
+      textarea, input[type="file"], input[type="text"] {
+        background: rgba(0,0,0,0.2) !important;
+        border: 1px solid rgba(255,255,255,0.1) !important;
+        color: white !important;
+        border-radius: 10px;
+        padding: 10px;
+        width: 100%;
+        margin-bottom: 15px;
+      }
+      textarea:focus {
+        outline: none;
+        border-color: var(--primary) !important;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+
+    <nav id="sidebar">
+      <div class="brand">E-Learn</div>
+      <a href="/dashboard" class="nav-link"><i class="fas fa-th-large"></i> Dashboard</a>
+      <a href="/courses" class="nav-link"><i class="fas fa-book-open"></i> Courses</a>
+      <a href="/learning" class="nav-link"><i class="fas fa-brain"></i> Learning</a>
+      <a href="/workspace" class="nav-link active"><i class="fas fa-tools"></i> Workspace</a>
+      <a href="/logout" class="nav-link logout"><i class="fas fa-sign-out-alt"></i> Log Out</a>
+    </nav>
+
+    <main id="main-content">
+      <div class="dashboard-header">
+        <h2>Workspace Tools</h2>
+        <p class="text-secondary">Accessibility and advanced features to enhance your learning.</p>
+      </div>
+
+      <div class="icon-container">
+        <div class="tool-card" onclick="openPopup('supportPopup')">
+          <i class="fas fa-headset"></i>
+          <p>Customer Support</p>
+        </div>
+        <div class="tool-card" onclick="openPopup('quizPopup')">
+          <i class="fas fa-question-circle"></i>
+          <p>Interactive Quiz</p>
+        </div>
+        <div class="tool-card" onclick="openPopup('speechToTextPopup')">
+          <i class="fas fa-microphone-alt"></i>
+          <p>Speech to Text</p>
+        </div>
+        <div class="tool-card" onclick="openPopup('textToSpeechPopup')">
+          <i class="fas fa-volume-up"></i>
+          <p>Text to Speech</p>
+        </div>
+        <div class="tool-card" onclick="openPopup('imagePredictionPopup')">
+          <i class="fas fa-image"></i>
+          <p>Image Prediction</p>
+        </div>
+      </div>
+    </main>
+
+    <!-- Overlays -->
+    <div class="popup-overlay" id="supportPopup">
+      <div class="popup-card">
+        <h4><i class="fas fa-headset"></i> Support</h4>
+        <p class="text-secondary">If you need help, please email our support team:</p>
+        <a href="mailto:support@elearn.com" class="text-primary fs-5 text-decoration-none fw-bold">support@elearn.com</a>
+        <br>
+        <button class="btn-close-custom w-100 mt-4" onclick="closePopup('supportPopup')">Close</button>
+      </div>
+    </div>
+
+    <div class="popup-overlay" id="quizPopup">
+      <div class="popup-card">
+        <h4><i class="fas fa-question-circle"></i> Knowledge Check</h4>
+        <form id="quizForm">
+          <div id="quizQuestions"></div>
+          <button type="submit" class="btn-action w-100">Submit Answers</button>
+        </form>
+        <div id="quizResult" class="mt-3 fw-bold text-success text-center fs-5"></div>
+        <button class="btn-close-custom w-100" onclick="closePopup('quizPopup')">Close</button>
+      </div>
+    </div>
+
+    <div class="popup-overlay" id="speechToTextPopup">
+      <div class="popup-card">
+        <h4><i class="fas fa-microphone"></i> Dictation</h4>
+        <button class="btn-action w-100 mb-3" id="startSpeechToText">Start Listening</button>
+        <div id="transcript" class="p-3 mb-3 text-white" style="background: rgba(0,0,0,0.3); border-radius:10px; min-height:100px;"></div>
+        <button class="btn-close-custom w-100" onclick="closePopup('speechToTextPopup')">Close</button>
+      </div>
+    </div>
+
+    <div class="popup-overlay" id="textToSpeechPopup">
+      <div class="popup-card">
+        <h4><i class="fas fa-volume-up"></i> Reader</h4>
+        <textarea id="textToSpeechInput" rows="4" placeholder="Enter text to be read out loud..."></textarea>
+        <button class="btn-action w-100 mb-2" id="playTextToSpeech">Speak</button>
+        <button class="btn-close-custom w-100" onclick="closePopup('textToSpeechPopup')">Close</button>
+      </div>
+    </div>
+
+    <div class="popup-overlay" id="imagePredictionPopup">
+      <div class="popup-card">
+        <h4><i class="fas fa-image"></i> Image Analysis</h4>
+        <input type="file" id="imageUpload" accept="image/*" />
+        <img id="imagePreview" style="max-width:100%; border-radius:10px; margin-top:10px; display:none;" />
+        <button class="btn-close-custom w-100 mt-3" onclick="closePopup('imagePredictionPopup')">Close</button>
+      </div>
+    </div>
+
+    <script>
+      function openPopup(id) {
+        document.getElementById(id).classList.add('active');
+        if(id === 'quizPopup') loadQuizQuestions();
+      }
+      function closePopup(id) {
+        document.getElementById(id).classList.remove('active');
+      }
+
+      // Quiz logic ported
+      const quizQuestions = [
+        { question: "Which of the following is the correct order of precedence in C programming?", options: ["* / + -", "+ - * /", "* + / -", "* / - +"], answer: "* / + -" },
+        { question: "Which of the following algorithms is NOT stable?", options: ["Merge Sort", "Insertion Sort", "Quick Sort", "Bubble Sort"], answer: "Quick Sort" },
+        { question: "In a Binary Search Tree, which traversal method gives the nodes in non-decreasing order?", options: ["Preorder", "Inorder", "Postorder", "Level-order"], answer: "Inorder" },
+        { question: "In relational databases, what is the term for eliminating redundant data by separating data into related tables?", options: ["Denormalization", "Normalization", "Foreign Keying", "Functional Dependency"], answer: "Normalization" },
+        { question: "Which of the following data structures provides amortized O(1) time complexity for insertion and deletion?", options: ["Stack", "Queue", "Hash Map", "Binary Search Tree"], answer: "Hash Map" },
+        { question: "Which of the following is true about Prim’s Algorithm?", options: ["It is used for finding the shortest path in a graph.", "It finds a Minimum Spanning Tree.", "It works only on weighted graphs.", "Both b and c."], answer: "Both b and c." },
+      ];
+      
+      function loadQuizQuestions() {
+        const c = document.getElementById("quizQuestions");
+        c.innerHTML = quizQuestions.map((q, index) => `
+          <div class="mb-4">
+            <h6 class="text-light">${index+1}. ${q.question}</h6>
+            ${q.options.map(opt => `
+              <label class="quiz-option">
+                <input type="radio" name="question${index}" value="${opt}" required> ${opt}
+              </label>
+            `).join('')}
+          </div>
+        `).join('');
+      }
+
+      document.getElementById("quizForm").onsubmit = e => {
+        e.preventDefault();
+        let score = 0;
+        quizQuestions.forEach((q, index) => {
+          const sel = document.querySelector(`input[name="question${index}"]:checked`);
+          if(sel && sel.value === q.answer) score++;
+        });
+        document.getElementById("quizResult").textContent = `Score: ${score} / ${quizQuestions.length}`;
+      };
+
+      // TTS
+      document.getElementById("playTextToSpeech").onclick = () => {
+        const text = document.getElementById("textToSpeechInput").value;
+        const speech = new SpeechSynthesisUtterance(text);
+        window.speechSynthesis.speak(speech);
+      };
+
+      // STT
+      const SpeechReg = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (SpeechReg) {
+        const recognition = new SpeechReg();
+        recognition.lang = "en-US";
+        recognition.interimResults = false;
+        document.getElementById("startSpeechToText").onclick = () => {
+          document.getElementById("transcript").innerText = "Listening...";
+          recognition.start();
+        };
+        recognition.onresult = e => {
+          document.getElementById("transcript").innerText = e.results[0][0].transcript;
+        };
+        recognition.onerror = e => {
+          alert("Microphone error or not allowed.");
+        };
+      } else {
+        document.getElementById("startSpeechToText").innerText = "Not Supported in this Browser";
+        document.getElementById("startSpeechToText").disabled = true;
+      }
+
+      // Preview
+      document.getElementById("imageUpload").onchange = e => {
+        const file = e.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = ev => {
+            const img = document.getElementById("imagePreview");
+            img.src = ev.target.result;
+            img.style.display = "block";
+          };
+          reader.readAsDataURL(file);
+        }
+      };
+    </script>
+  </body>
+</html>
